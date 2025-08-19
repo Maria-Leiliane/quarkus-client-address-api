@@ -45,7 +45,7 @@ The solution provides a complete set of endpoints to manage **clients** and thei
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Maria-Leiliane/quarkus-client-address-api.git
+git clone git@github.com:Maria-Leiliane/quarkus-client-address-api.git
 cd quarkus-client-address-api
 ```
 
@@ -68,7 +68,7 @@ quarkus.flyway.migrate-at-start=true
 ./gradlew quarkusDev
 ```
 
-> Dev UI: [http://localhost:8080/q/dev](http://localhost:8080/q/dev)
+> Dev UI: [http://localhost:8080](http://localhost:8080)
 
 ### 4. Package and Run
 
