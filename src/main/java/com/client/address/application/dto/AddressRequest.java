@@ -3,9 +3,8 @@ package com.client.address.application.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 public record AddressRequest(
-        @NotBlank(message = "Name is required")
+        @NotBlank(message = "Address name is required")
         String name,
 
         @NotBlank(message = "Street is required")

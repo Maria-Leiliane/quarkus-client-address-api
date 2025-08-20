@@ -65,9 +65,8 @@ public class ClientService {
 
     @Transactional
     public ClientResponse create(ClientRequest request) {
-        clientRepository.findByEmail(request.email()).ifPresent(c -> {
-            throw new BusinessException("Email already registered.");
-        });
+        clientRepository.findByEmail(request.email())
+                .ifPresent(c -> { throw new BusinessException("Email already registered."); });
 
         ClientEntity clientEntity = ClientMapper.toEntity(request);
         clientEntity.setPassword(BcryptUtil.bcryptHash(request.password()));
@@ -76,7 +75,11 @@ public class ClientService {
         Long clientId = clientRepository.save(clientEntity);
         clientEntity.setId(clientId);
 
-        List<AddressResponse> createdAddresses = createOrUpdateAddresses(request.addresses(), clientId);
+        // Create addresses for the client
+        List<AddressResponse> createdAddresses = request.addresses().stream()
+                .map(address -> addressService.create(address, clientId))
+                .toList();
+
         return ClientMapper.toResponse(clientEntity, createdAddresses);
     }
 
@@ -132,6 +135,4 @@ public class ClientService {
                 .map(req -> addressService.create(req, clientId))
                 .collect(Collectors.toList());
     }
-
-
 }

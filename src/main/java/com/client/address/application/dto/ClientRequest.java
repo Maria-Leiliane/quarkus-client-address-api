@@ -25,7 +25,7 @@ public record ClientRequest(
         String password,
 
         @NotNull(message = "Addresses list cannot be null")
-        @Size(min = 1, message = "At least one address is required for a new client")
+        @Size(min = 1, message = "At least one address is required")
         @Valid
         List<AddressRequest> addresses
 ) {}
