@@ -15,7 +15,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-flyway'
     implementation 'io.quarkus:quarkus-rest-jackson'
     implementation 'io.quarkus:quarkus-jdbc-postgresql'
-    implementation 'io.quarkiverse.jdbi:quarkus-jdbi:1.8.0'
+    implementation 'io.quarkiverse.jdbi:quarkus-jdbi:3.2.0'
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-arc'
     implementation 'io.quarkus:quarkus-rest'
