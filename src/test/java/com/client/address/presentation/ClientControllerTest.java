@@ -41,21 +41,21 @@ class ClientControllerTest {
                 .body("document", is(validCnpj));
     }
 
-//    @Test
-//    @Transactional
-//    @DisplayName("Should find a client by ID when client exists")
-//    void shouldGetClientById_whenClientExists() {
-//        ClientResponse client = createTestClientAndGetResponse();
-//
-//        given()
-//                .contentType(ContentType.JSON)
-//                .when()
-//                .get("/clients/{id}", client.id())
-//                .then()
-//                .statusCode(200)
-//                .body("id", equalTo(client.id().intValue()))
-//                .body("email", is(client.email()));
-//    }
+    @Test
+    @Transactional
+    @DisplayName("Should find a client by ID when client exists")
+    void shouldGetClientById_whenClientExists() {
+        ClientResponse client = createTestClientAndGetResponse();
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/clients/{id}", client.id())
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(client.id().intValue()))
+                .body("email", is(client.email()));
+    }
 
     @Test
     @DisplayName("Should return 404 Not Found when client does not exist")
@@ -69,26 +69,26 @@ class ClientControllerTest {
                 .statusCode(404);
     }
 
-//    @Test
-//    @Transactional
-//    @DisplayName("Should delete a client and return 204 No Content")
-//    void shouldDeleteClient() {
-//        Long idToDelete = createTestClientAndGetResponse().id();
-//
-//        given()
-//                .contentType(ContentType.JSON)
-//                .when()
-//                .delete("/clients/{id}", idToDelete)
-//                .then()
-//                .statusCode(204);
-//
-//        given()
-//                .contentType(ContentType.JSON)
-//                .when()
-//                .get("/clients/{id}", idToDelete)
-//                .then()
-//                .statusCode(404);
-//    }
+    @Test
+    @Transactional
+    @DisplayName("Should delete a client and return 204 No Content")
+    void shouldDeleteClient() {
+        Long idToDelete = createTestClientAndGetResponse().id();
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/clients/{id}", idToDelete)
+                .then()
+                .statusCode(204);
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/clients/{id}", idToDelete)
+                .then()
+                .statusCode(404);
+    }
 
     /**
      * Helper method to create a standard client with unique and VALID data.
