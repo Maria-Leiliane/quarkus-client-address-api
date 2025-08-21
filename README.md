@@ -70,7 +70,7 @@ quarkus.flyway.migrate-at-start=true
 
 > Dev UI: [http://localhost:8080](http://localhost:8080)
 
-For test in insomnia or postman: [http://localhost:8080/q/swagger-ui/](http://localhost:8080/q/swagger-ui/)
+For test we have the doc: [http://localhost:8080/q/swagger-ui/](http://localhost:8080/q/swagger-ui/)
 Other options: Import the `client-address-api.json` file and lets test it.
 
 ### 5. Run with Docker (optional)
