@@ -70,12 +70,6 @@ quarkus.flyway.migrate-at-start=true
 
 > Dev UI: [http://localhost:8080](http://localhost:8080)
 
-### 4. Package and Run
-
-```bash
-./gradlew build
-java -jar build/quarkus-app/quarkus-run.jar
-```
 
 ### 5. Run with Docker (optional)
 
