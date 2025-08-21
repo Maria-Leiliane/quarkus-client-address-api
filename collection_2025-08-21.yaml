@@ -80,7 +80,7 @@ collection:
             	"phone": "+5511987655321",
             	"document": "08239353029",
             	"email": "maria.silva2@example.com",
-            	"password": "senhaForte123",
+            	"password": "senha123",
             	"addresses": [
             		{
             			"name": "Casa",
