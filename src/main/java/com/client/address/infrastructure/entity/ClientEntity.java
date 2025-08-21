@@ -8,7 +8,7 @@ public class ClientEntity {
     private String name;
     private String phone;
     private String document;
-    private DocumentType documentType;
+    private String documentType;
     private String email;
     private String password;
     private LocalDateTime createdAt;
@@ -25,9 +25,12 @@ public class ClientEntity {
     public String getDocument() { return document; }
     public void setDocument(String document) { this.document = document; }
 
-    public DocumentType getDocumentType() { return documentType; }
-    public void setDocumentType(DocumentType documentType) { this.documentType = documentType; }
-
+    public String getDocumentType() {
+        return documentType;
+    }
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 

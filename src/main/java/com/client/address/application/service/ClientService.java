@@ -1,6 +1,8 @@
 package com.client.address.application.service;
 
 import com.client.address.application.dto.*;
+import com.client.address.application.service.mapper.AddressMapper;
+import com.client.address.infrastructure.entity.AddressEntity;
 import com.client.address.presentation.exception.BusinessException;
 import com.client.address.presentation.exception.ResourceNotFoundException;
 import com.client.address.application.service.mapper.ClientMapper;
@@ -16,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,57 +32,75 @@ public class ClientService {
     @Inject
     AddressService addressService;
 
-    // --- MÉTODOS DE CONSULTA (LEITURA) ---
     @Transactional(Transactional.TxType.SUPPORTS)
     public Optional<ClientResponse> findById(Long id) {
         return clientRepository.findById(id).map(this::mapToClientResponseWithAddresses);
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
-    public PageResponse<ClientResponse> findAllPaginated(
-            String name,
-            LocalDate creationDate,
-            int page,
-            int size
-    ) {
+    public PageResponse<ClientResponse> findAllPaginated(String name, LocalDate creationDate, int page, int size) {
         int offset = page * size;
         String nameFilter = (name != null && !name.isBlank()) ? "%" + name + "%" : null;
 
-        List<ClientEntity> clientEntities = clientRepository.findAllPaginated(
-                nameFilter,
-                creationDate,
-                size,
-                offset
-        );
+        List<ClientEntity> clientEntities = clientRepository.findAllPaginated(nameFilter, creationDate, size, offset);
+        if (clientEntities.isEmpty()) {
+            return new PageResponse<>(new ArrayList<>(), page, size, 0, 0);
+        }
 
         long totalElements = clientRepository.countWithFilters(nameFilter, creationDate);
 
+        List<Long> clientIds = clientEntities.stream().map(ClientEntity::getId).collect(Collectors.toList());
+
+        Map<Long, List<AddressEntity>> addressesByClientId = addressRepository.findByClientIds(clientIds)
+                .stream()
+                .collect(Collectors.groupingBy(AddressEntity::getClientId));
+
         List<ClientResponse> responses = clientEntities.stream()
-                .map(this::mapToClientResponseWithAddresses)
+                .map(client -> {
+                    List<AddressEntity> addressEntities = addressesByClientId.getOrDefault(client.getId(), new ArrayList<>());
+
+                    //Convert the list of entities to a list of DTOs ---
+                    List<AddressResponse> addressResponses = addressEntities.stream()
+                            .map(AddressMapper::toResponse)
+                            .collect(Collectors.toList());
+
+                    return ClientMapper.toResponse(client, addressResponses);
+                })
                 .collect(Collectors.toList());
 
         long totalPages = totalElements == 0 ? 0 : (long) Math.ceil((double) totalElements / size);
-
         return new PageResponse<>(responses, page, size, totalElements, totalPages);
     }
 
     @Transactional
     public ClientResponse create(ClientRequest request) {
-        clientRepository.findByEmail(request.email())
-                .ifPresent(c -> { throw new BusinessException("Email already registered."); });
+        System.out.println("--- DEBUG: Entering ClientService.create ---");
 
+        System.out.println("--- DEBUG: 1. Validating email: " + request.email());
+        clientRepository.findByEmail(request.email()).ifPresent(c -> {
+            throw new BusinessException("Email already registered.");
+        });
+        System.out.println("--- DEBUG:    -> Email validation OK.");
+
+        System.out.println("--- DEBUG: 2. Mapping DTO to Entity...");
         ClientEntity clientEntity = ClientMapper.toEntity(request);
+        System.out.println("--- DEBUG:    -> Mapping OK. DocumentType is: " + clientEntity.getDocumentType());
+
+        System.out.println("--- DEBUG: 3. Hashing password...");
         clientEntity.setPassword(BcryptUtil.bcryptHash(request.password()));
         clientEntity.setCreatedAt(LocalDateTime.now());
+        System.out.println("--- DEBUG:    -> Hashing OK.");
 
-        Long clientId = clientRepository.save(clientEntity);
+        System.out.println("--- DEBUG: 4. Calling clientRepository.save()...");
+        Long clientId = clientRepository.save(clientEntity); // <<-- THE MOST LIKELY POINT OF FAILURE
         clientEntity.setId(clientId);
+        System.out.println("--- DEBUG:    -> Repository saved successfully! Generated ID: " + clientId);
 
-        // Create addresses for the client
-        List<AddressResponse> createdAddresses = request.addresses().stream()
-                .map(address -> addressService.create(address, clientId))
-                .toList();
+        System.out.println("--- DEBUG: 5. Creating addresses...");
+        List<AddressResponse> createdAddresses = createOrUpdateAddresses(request.addresses(), clientId);
+        System.out.println("--- DEBUG:    -> Addresses OK.");
 
+        System.out.println("--- DEBUG: 6. Mapping final response...");
         return ClientMapper.toResponse(clientEntity, createdAddresses);
     }
 

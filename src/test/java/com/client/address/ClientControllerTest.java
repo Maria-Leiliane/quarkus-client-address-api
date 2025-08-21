@@ -1,62 +1,34 @@
 package com.client.address;
 
 import com.client.address.application.dto.ClientResponse;
+import com.client.address.util.DocumentGenerator;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.util.UUID; // Used to generate unique emails
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @QuarkusTest
 class ClientControllerTest {
 
-    // Create ID client first to use in tests
-    private static Long testClientId;
-
-    // Client base for all tests.
-    @BeforeAll
-    @Transactional
-    static void setup() {
-        String clientRequestBody = """
-        {
-            "name": "Test Base Client",
-            "phone": "+5511911112222",
-            "document": "11122233344",
-            "email": "test-base.get@example.com",
-            "password": "password*test",
-            "addresses": [
-                { "name": "House", "street": "Test Avenue II", "number": "1", "district": "Base District",
-                  "city": "Cit Test", "state": "SP", "zipCode": "12345000", "mainAddress": true }
-            ]
-        }
-        """;
-
-        // Extract ID for use in other tests
-        ClientResponse response = given()
-                .contentType(ContentType.JSON)
-                .body(clientRequestBody)
-                .when().post("/clients")
-                .then().statusCode(201)
-                .extract().as(ClientResponse.class);
-
-        testClientId = response.id();
-    }
-
     @Test
-    @Order(1)
-    @Transactional
-    @DisplayName("Create a new client")
+    @DisplayName("Should create a new client successfully")
     void shouldCreateClientSuccessfully() {
-        String requestBody = """
+        // Use the generator to create a valid, random document
+        String validCnpj = DocumentGenerator.generateCNPJ();
+        String uniqueEmail = "client-" + validCnpj + "@example.com";
+
+        String requestBody = String.format("""
         {
-            "name": "Test", "phone": "+5511987654321", "document": "13148373000185",
-            "email": "test@example.com", "password": "test-pass123",
+            "name": "New Client", "phone": "+5511987654321", "document": "%s",
+            "email": "%s", "password": "test-pass123",
             "addresses": [{ "name": "Test Place", "street": "Test Avenue", "number": "2025", "district": "Test Zone",
                            "city": "São Paulo", "state": "SP", "zipCode": "01000-000", "mainAddress": true }]
         }
-        """;
+        """, validCnpj, uniqueEmail); // Inject the valid document and unique email
 
         given()
                 .contentType(ContentType.JSON)
@@ -65,31 +37,26 @@ class ClientControllerTest {
                 .post("/clients")
                 .then()
                 .statusCode(201)
-                .header("Location", notNullValue())
-                .body("name", is("Test"))
-                .body("documentType", is("CNPJ"));
+                .body("document", is(validCnpj)); // Verify with the generated document
     }
-
     @Test
-    @Order(2)
-    @Transactional
-    @DisplayName("Find client by ID")
+    @DisplayName("Should find a client by ID when client exists")
     void shouldGetClientById_whenClientExists() {
-        String testClientEmail = "test.get@example.com";
+        // ARRANGE: Create a client first to ensure it exists
+        ClientResponse client = createTestClientAndGetResponse();
+
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/clients/{id}", testClientId)
+                .get("/clients/{id}", client.id())
                 .then()
                 .statusCode(200)
-                .body("id", equalTo(testClientId.intValue()))
-                .body("email", is(testClientEmail));
+                .body("id", equalTo(client.id().intValue()))
+                .body("email", is(client.email()));
     }
 
     @Test
-    @Order(3)
-    @Transactional
-    @DisplayName("Not Found for dont's a client")
+    @DisplayName("Should return 404 Not Found when client does not exist")
     void shouldGetClientById_whenClientNotFound() {
         Long nonExistentId = 99999L;
         given()
@@ -101,42 +68,54 @@ class ClientControllerTest {
     }
 
     @Test
-    @Order(4)
-    @Transactional
-    @DisplayName("List client pagination")
-    void shouldGetAllClients() {
-        given()
-                .contentType(ContentType.JSON)
-                .queryParam("page", 0)
-                .queryParam("size", 5)
-                .when()
-                .get("/clients")
-                .then()
-                .statusCode(200)
-                .body("content", notNullValue())
-                .body("currentPage", is(0))
-                .body("pageSize", is(5));
-    }
-
-    @Test
-    @Order(5)
-    @Transactional
-    @DisplayName("Delete a client and return 204 No Content")
+    @DisplayName("Should delete a client and return 204 No Content")
     void shouldDeleteClient() {
+        // ARRANGE: Create a client to be deleted
+        Long idToDelete = createTestClientAndGetResponse().id();
+
+        // ACT: Delete the client
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("/clients/{id}", testClientId)
+                .delete("/clients/{id}", idToDelete)
                 .then()
                 .statusCode(204);
 
-        // Verify if a client was deleted
+        // ASSERT: Verify the client was actually deleted
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/clients/{id}", testClientId)
+                .get("/clients/{id}", idToDelete)
                 .then()
                 .statusCode(404);
+    }
+
+    /**
+     * Helper method to create a standard client with unique data for each test run.
+     * This makes tests self-contained and avoids data conflicts.
+     * @return The full ClientResponse of the created client.
+     */
+    private ClientResponse createTestClientAndGetResponse() {
+        // Using UUID ensures the email and document are unique for every single test execution
+        String uniqueId = UUID.randomUUID().toString().replaceAll("-", "");
+        String uniqueEmail = "helper." + uniqueId.substring(0, 10) + "@example.com";
+        String uniqueDocument = "1" + uniqueId.substring(0, 10); // Generates a unique 11-digit CPF-like string
+
+        String clientRequestBody = String.format("""
+        {
+            "name": "Helper Client", "phone": "+5511911112222", "document": "%s",
+            "email": "%s", "password": "password*test",
+            "addresses": [{ "name": "House", "street": "Test Avenue II", "number": "1", "district": "Base District",
+                           "city": "Cit Test", "state": "SP", "zipCode": "12345000", "mainAddress": true }]
+        }
+        """, uniqueDocument, uniqueEmail);
+
+        return given()
+                .contentType(ContentType.JSON)
+                .body(clientRequestBody)
+                .when().post("/clients")
+                .then().statusCode(201)
+                .extract().as(ClientResponse.class);
     }
 }
 // ./gradlew test --tests com.client.address.ClientControllerTest

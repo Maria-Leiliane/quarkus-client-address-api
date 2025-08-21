@@ -4,6 +4,7 @@ import com.client.address.infrastructure.entity.AddressEntity;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -13,6 +14,9 @@ import java.util.Optional;
 
 @RegisterBeanMapper(AddressEntity.class)
 public interface AddressRepository {
+
+    @SqlQuery("SELECT * FROM addresses WHERE client_id IN (<clientIds>)")
+    List<AddressEntity> findByClientIds(@BindList("clientIds") List<Long> clientIds);
 
     @SqlQuery("SELECT * FROM addresses WHERE id = :id")
     Optional<AddressEntity> findById(@Bind("id") Long id);

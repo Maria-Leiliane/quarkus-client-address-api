@@ -33,7 +33,7 @@ public class CpfValidator {
         int sum = 0;
         // Loop for use the weight
         for (int i = 0; i < str.length(); i++) {
-            // First weight list (11 or 10) multiply the first dig.
+            // The first weight list (11 or 10) multiply the first dig.
             sum += Character.getNumericValue(str.charAt(i)) * CpfValidator.WEIGHT_CPF[i + 1];
         }
         int remainder = sum % 11;
