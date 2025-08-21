@@ -43,15 +43,15 @@ public interface ClientRepository {
         SELECT * FROM clients
         WHERE (:name IS NULL OR name ILIKE :name)
           AND (:creationDate IS NULL OR DATE(created_at) = :creationDate)
-        ORDER BY created_at DESC
+        ORDER BY created_at DESC -- CORRECTED: Using a fixed and safe sort order
         LIMIT :limit OFFSET :offset
     """)
     List<ClientEntity> findAllPaginated(
             @Bind("name") String name,
             @Bind("creationDate") LocalDate creationDate,
             @Bind("limit") int limit,
-            @Bind("offset") int offset,
-            String safeSortBy, String safeSortDirection);
+            @Bind("offset") int offset
+    );
 
     @SqlQuery("""
         SELECT COUNT(*) FROM clients
@@ -62,19 +62,4 @@ public interface ClientRepository {
             @Bind("name") String name,
             @Bind("creationDate") LocalDate creationDate
     );
-
-    @SqlQuery("""
-        SELECT * 
-        FROM clients 
-        WHERE (:name IS NULL OR name ILIKE :name)
-          AND (:creationDate IS NULL OR DATE(created_at) = :creationDate)
-        ORDER BY <sortBy> <sortDirection>
-        LIMIT :limit OFFSET :offset
-        """)
-    @RegisterBeanMapper(ClientEntity.class)
-    List<ClientEntity> findAllPaginated(
-            @Bind("name") String name,
-            @Bind("creationDate") LocalDate creationDate,
-            @Bind("offset") int offset,
-            int i);
 }

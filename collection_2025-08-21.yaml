@@ -1,0 +1,444 @@
+type: spec.insomnia.rest/5.0
+name: quarkus-client-address-api
+meta:
+  id: wrk_9d9108e11e7040c68df7634fe69915f8
+  created: 1755641955905
+  modified: 1755764836796
+  description: ""
+collection:
+  - name: Clients
+    meta:
+      id: fld_671e985b9b6c4e33b0c902e61fc2ed61
+      created: 1724224500000
+      modified: 1724224500000
+      sortKey: -100
+      description: ""
+    children:
+      - url: localhost:8080/clients/{id}
+        name: Delete Client
+        meta:
+          id: req_328780a857dd4344880bbbbd4c99edb0
+          created: 1724224500000
+          modified: 1755764583647
+          isPrivate: false
+          description: ""
+          sortKey: -60
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/clients/{id}
+        name: Partially Update Client
+        meta:
+          id: req_53a6e0407c2f4a85be2fc4451dd52cab
+          created: 1724224500000
+          modified: 1755764573231
+          isPrivate: false
+          description: ""
+          sortKey: -70
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Maria da Silva",
+            	"phone": "+5511985587777",
+            	"password": "Forte123"
+            	
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8080/clients
+        name: Create Client
+        meta:
+          id: req_5663b6faeddf4962973d779819794a4d
+          created: 1724224500000
+          modified: 1755763461172
+          isPrivate: false
+          description: ""
+          sortKey: -100
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Marina da Silva",
+            	"phone": "+5511987655321",
+            	"document": "08239353029",
+            	"email": "maria.silva2@example.com",
+            	"password": "senhaForte123",
+            	"addresses": [
+            		{
+            			"name": "Casa",
+            			"street": "Rua Flores",
+            			"number": "123",
+            			"complement": "Apto 101",
+            			"district": "Centro",
+            			"city": "São Paulo",
+            			"state": "SP",
+            			"zipCode": "01000-000",
+            			"mainAddress": true
+            		}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8080/clients/
+        name: Get All Clients (Paginated)
+        meta:
+          id: req_5c291c0c6fb84430a8e7c0183b24254e
+          created: 1724224500000
+          modified: 1755765073590
+          isPrivate: false
+          description: ""
+          sortKey: -80
+        method: GET
+        parameters:
+          - id: p1
+            name: page
+            value: "0"
+            description: ""
+            disabled: false
+          - id: p2
+            name: size
+            value: "5"
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8080/clients/{id}
+        name: Get Client By ID
+        meta:
+          id: req_eae98c3f2d64421d9e117694753b0a8c
+          created: 1724224500000
+          modified: 1755764512921
+          isPrivate: false
+          description: ""
+          sortKey: -90
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Addresses
+    meta:
+      id: fld_b308baf011804021bee5419139410120
+      created: 1724224500000
+      modified: 1724224500000
+      sortKey: -90
+      description: ""
+    children:
+      - url: localhost:8080/clients/{id}/addresses/{id}
+        name: Delete Address from Client
+        meta:
+          id: req_ab755877304b46939d84105af3b1fbff
+          created: 1724224500000
+          modified: 1755764547944
+          isPrivate: false
+          description: ""
+          sortKey: -80
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8080/clients/{id}
+        name: Get All Addresses for Client
+        meta:
+          id: req_c47ea393255c46deac78706598a895a8
+          created: 1724224500000
+          modified: 1755764592837
+          isPrivate: false
+          description: ""
+          sortKey: -100
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8080/clients/{id}/addresses
+        name: Create Address for Client
+        meta:
+          id: req_f32d4d27a1cb4924a6545d948f2fae34
+          created: 1724224500000
+          modified: 1755764610905
+          isPrivate: false
+          description: ""
+          sortKey: -90
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Trabalho",
+            	"street": "Avenida Principal",
+            	"number": "2000",
+            	"complement": "Andar 10",
+            	"district": "Centro Empresarial",
+            	"city": "São Paulo",
+            	"state": "SP",
+            	"zipCode": "01001-000",
+            	"mainAddress": false
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_43aa0dd7b3d1df56a33f1ca54d02470827d3c2db
+    created: 1755641955955
+    modified: 1755641955955
+environments:
+  name: Base Environment
+  meta:
+    id: env_43aa0dd7b3d1df56a33f1ca54d02470827d3c2db
+    created: 1755641955950
+    modified: 1755761739848
+    isPrivate: false
+  data:
+    "": localhost:8080
+spec:
+  contents:
+    _type: export
+    __export_format: 4
+    __export_date: 2025-08-21T07:15:00.000Z
+    __export_source: insomnia.desktop.app:v2023.5.8
+    resources:
+      - _id: wrk_1
+        modified: 1724224500000
+        created: 1724224500000
+        name: Client Address API
+        description: ""
+        scope: collection
+        _type: workspace
+      - _id: fld_clients
+        parentId: wrk_1
+        modified: 1724224500000
+        created: 1724224500000
+        name: Clients
+        description: ""
+        metaSortKey: -100
+        _type: request_group
+      - _id: req_create_client
+        parentId: fld_clients
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients"
+        name: Create Client
+        description: ""
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Maria da Silva",
+            	"phone": "+5511987654321",
+            	"document": "78386389033",
+            	"email": "maria.silva@example.com",
+            	"password": "senhaForte123",
+            	"addresses": [
+            		{
+            			"name": "Casa",
+            			"street": "Rua das Flores",
+            			"number": "123",
+            			"complement": "Apto 101",
+            			"district": "Centro",
+            			"city": "São Paulo",
+            			"state": "SP",
+            			"zipCode": "01000-000",
+            			"mainAddress": true
+            		}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        metaSortKey: -100
+        _type: request
+      - _id: req_get_client_by_id
+        parentId: fld_clients
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients/{{ _.clientId }}"
+        name: Get Client By ID
+        description: ""
+        method: GET
+        metaSortKey: -90
+        _type: request
+      - _id: req_get_all_clients
+        parentId: fld_clients
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients"
+        name: Get All Clients (Paginated)
+        description: ""
+        method: GET
+        parameters:
+          - id: p1
+            name: page
+            value: "0"
+            description: ""
+            disabled: false
+          - id: p2
+            name: size
+            value: "5"
+            description: ""
+            disabled: false
+        metaSortKey: -80
+        _type: request
+      - _id: req_patch_client
+        parentId: fld_clients
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients/{{ _.clientId }}"
+        name: Partially Update Client
+        description: ""
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Maria da Silva Souza",
+            	"phone": "+5511988887777"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        metaSortKey: -70
+        _type: request
+      - _id: req_delete_client
+        parentId: fld_clients
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients/{{ _.clientId }}"
+        name: Delete Client
+        description: ""
+        method: DELETE
+        metaSortKey: -60
+        _type: request
+      - _id: fld_addresses
+        parentId: wrk_1
+        modified: 1724224500000
+        created: 1724224500000
+        name: Addresses
+        description: ""
+        metaSortKey: -90
+        _type: request_group
+      - _id: req_get_all_addresses
+        parentId: fld_addresses
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients/{{ _.clientId }}/addresses"
+        name: Get All Addresses for Client
+        description: ""
+        method: GET
+        metaSortKey: -100
+        _type: request
+      - _id: req_create_address
+        parentId: fld_addresses
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients/{{ _.clientId }}/addresses"
+        name: Create Address for Client
+        description: ""
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Trabalho",
+            	"street": "Avenida Principal",
+            	"number": "2000",
+            	"complement": "Andar 10",
+            	"district": "Centro Empresarial",
+            	"city": "São Paulo",
+            	"state": "SP",
+            	"zipCode": "01001-000",
+            	"mainAddress": false
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        metaSortKey: -90
+        _type: request
+      - _id: req_delete_address
+        parentId: fld_addresses
+        modified: 1724224500000
+        created: 1724224500000
+        url: "{{ _.baseUrl }}/clients/{{ _.clientId }}/addresses/{{ _.addressId }}"
+        name: Delete Address from Client
+        description: ""
+        method: DELETE
+        metaSortKey: -80
+        _type: request
+      - _id: env_1
+        parentId: wrk_1
+        modified: 1724224500000
+        created: 1724224500000
+        name: Base Environment
+        data:
+          baseUrl: http://localhost:8080
+          clientId: "1"
+          addressId: "1"
+        dataPropertyOrder:
+          "&":
+            - baseUrl
+            - clientId
+            - addressId
+        isPrivate: false
+        metaSortKey: 100
+        _type: environment
+  meta:
+    id: spc_1ae116dc299e454a9bf224679d79135d
+    created: 1755761183648
+    modified: 1755764836788
