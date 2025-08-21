@@ -1,9 +1,8 @@
-package com.client.address;
+package com.client.address.application.service;
 
 
 import com.client.address.application.dto.AddressRequest;
 import com.client.address.application.dto.ClientRequest;
-import com.client.address.application.service.ClientService;
 import com.client.address.infrastructure.entity.ClientEntity;
 import com.client.address.infrastructure.repository.ClientRepository;
 import com.client.address.presentation.exception.BusinessException;

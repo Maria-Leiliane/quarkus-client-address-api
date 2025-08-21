@@ -1,7 +1,6 @@
-package com.client.address;
+package com.client.address.application.service;
 
 import com.client.address.application.dto.AddressRequest;
-import com.client.address.application.service.AddressService;
 import com.client.address.infrastructure.entity.AddressEntity;
 import com.client.address.infrastructure.entity.ClientEntity;
 import com.client.address.infrastructure.repository.AddressRepository;

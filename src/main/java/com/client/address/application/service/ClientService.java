@@ -74,33 +74,21 @@ public class ClientService {
 
     @Transactional
     public ClientResponse create(ClientRequest request) {
-        System.out.println("--- DEBUG: Entering ClientService.create ---");
 
-        System.out.println("--- DEBUG: 1. Validating email: " + request.email());
         clientRepository.findByEmail(request.email()).ifPresent(c -> {
             throw new BusinessException("Email already registered.");
         });
-        System.out.println("--- DEBUG:    -> Email validation OK.");
 
-        System.out.println("--- DEBUG: 2. Mapping DTO to Entity...");
         ClientEntity clientEntity = ClientMapper.toEntity(request);
-        System.out.println("--- DEBUG:    -> Mapping OK. DocumentType is: " + clientEntity.getDocumentType());
 
-        System.out.println("--- DEBUG: 3. Hashing password...");
         clientEntity.setPassword(BcryptUtil.bcryptHash(request.password()));
         clientEntity.setCreatedAt(LocalDateTime.now());
-        System.out.println("--- DEBUG:    -> Hashing OK.");
 
-        System.out.println("--- DEBUG: 4. Calling clientRepository.save()...");
         Long clientId = clientRepository.save(clientEntity); // <<-- THE MOST LIKELY POINT OF FAILURE
         clientEntity.setId(clientId);
-        System.out.println("--- DEBUG:    -> Repository saved successfully! Generated ID: " + clientId);
 
-        System.out.println("--- DEBUG: 5. Creating addresses...");
         List<AddressResponse> createdAddresses = createOrUpdateAddresses(request.addresses(), clientId);
-        System.out.println("--- DEBUG:    -> Addresses OK.");
 
-        System.out.println("--- DEBUG: 6. Mapping final response...");
         return ClientMapper.toResponse(clientEntity, createdAddresses);
     }
 

@@ -20,8 +20,6 @@ import java.time.LocalDate;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ClientController {
 
-
-
     @Inject
     ClientService clientService;
 
