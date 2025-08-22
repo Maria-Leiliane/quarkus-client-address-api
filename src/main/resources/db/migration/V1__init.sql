@@ -3,17 +3,17 @@ CREATE TABLE clients (
                          id BIGSERIAL PRIMARY KEY,
                          name VARCHAR(100) NOT NULL,
                          document VARCHAR(14) UNIQUE NOT NULL,
-                         document_type VARCHAR(4) NOT NULL, -- Será 'CPF' ou 'CNPJ', determinado pelo serviço.
+                         document_type VARCHAR(4) NOT NULL,
                          phone VARCHAR(20),
                          email VARCHAR(150) UNIQUE NOT NULL,
-                         password VARCHAR(100) NOT NULL, -- Tamanho adequado para armazenar senhas com hash.
+                         password VARCHAR(100) NOT NULL,
                          created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
 
 CREATE TABLE addresses (
                            id BIGSERIAL PRIMARY KEY,
                            client_id BIGINT NOT NULL,
-                           name VARCHAR(100) NOT NULL, -- Ex: "Casa", "Trabalho"
+                           name VARCHAR(100) NOT NULL,
                            street VARCHAR(100) NOT NULL,
                            number VARCHAR(20) NOT NULL,
                            complement VARCHAR(100),
