@@ -19,16 +19,14 @@ class ClientControllerTest {
     @DisplayName("Should create a new client successfully")
     void shouldCreateClientSuccessfully() {
         String validCnpj = DocumentGenerator.generateCNPJ();
-        String uniqueEmail = "client-" + validCnpj + "@example.com";
-
-        String requestBody = String.format("""
-        {
-            "name": "New Client", "phone": "+5511987654321", "document": "%s",
-            "email": "%s", "password": "test-pass123",
-            "addresses": [{ "name": "Test Place", "street": "Test Avenue", "number": "2025", "district": "Test Zone",
-                           "city": "São Paulo", "state": "SP", "zipCode": "01000-000", "mainAddress": true }]
-        }
-        """, validCnpj, uniqueEmail);
+        String requestBody = getString("client-", validCnpj, """
+                {
+                    "name": "New Client", "phone": "+5511987654321", "document": "%s",
+                    "email": "%s", "password": "test-pass123",
+                    "addresses": [{ "name": "Test Place", "street": "Test Avenue", "number": "2025", "district": "Test Zone",
+                                   "city": "São Paulo", "state": "SP", "zipCode": "01000-000", "mainAddress": true }]
+                }
+                """);
 
         given()
                 .contentType(ContentType.JSON)
@@ -39,6 +37,12 @@ class ClientControllerTest {
                 .log().ifValidationFails() // Log response body if validation fails
                 .statusCode(201)
                 .body("document", is(validCnpj));
+    }
+
+    private static String getString(String x, String validCnpj, String format) {
+        String uniqueEmail = x + validCnpj + "@example.com";
+
+        return String.format(format, validCnpj, uniqueEmail);
     }
 
     @Test
@@ -95,16 +99,14 @@ class ClientControllerTest {
      */
     private ClientResponse createTestClientAndGetResponse() {
         String validDocument = DocumentGenerator.generateCPF();
-        String uniqueEmail = "helper." + validDocument + "@example.com";
-
-        String clientRequestBody = String.format("""
-        {
-            "name": "Helper Client", "phone": "+5511911112222", "document": "%s",
-            "email": "%s", "password": "password*test",
-            "addresses": [{ "name": "House", "street": "Test Avenue II", "number": "1", "district": "Base District",
-                           "city": "Cit Test", "state": "SP", "zipCode": "12345000", "mainAddress": true }]
-        }
-        """, validDocument, uniqueEmail);
+        String clientRequestBody = getString("helper.", validDocument, """
+                {
+                    "name": "Helper Client", "phone": "+5511911112222", "document": "%s",
+                    "email": "%s", "password": "password*test",
+                    "addresses": [{ "name": "House", "street": "Test Avenue II", "number": "1", "district": "Base District",
+                                   "city": "Cit Test", "state": "SP", "zipCode": "12345000", "mainAddress": true }]
+                }
+                """);
 
         return given()
                 .contentType(ContentType.JSON)
