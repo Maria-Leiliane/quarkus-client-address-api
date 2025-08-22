@@ -1,5 +1,4 @@
--- Tabela de Clientes
--- Define a estrutura principal para armazenar os dados dos clientes.
+
 CREATE TABLE clients (
                          id BIGSERIAL PRIMARY KEY,
                          name VARCHAR(100) NOT NULL,
@@ -11,8 +10,6 @@ CREATE TABLE clients (
                          created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
 
--- Tabela de Endereços
--- Armazena os endereços, com uma chave estrangeira (foreign key) que os liga a um cliente.
 CREATE TABLE addresses (
                            id BIGSERIAL PRIMARY KEY,
                            client_id BIGINT NOT NULL,
@@ -27,7 +24,5 @@ CREATE TABLE addresses (
                            main_address BOOLEAN NOT NULL DEFAULT FALSE,
                            created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 
-    -- A constraint que garante a integridade: se um cliente for deletado,
-    -- todos os seus endereços também serão (ON DELETE CASCADE).
                            CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE CASCADE
 );
