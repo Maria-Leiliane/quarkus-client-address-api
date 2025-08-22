@@ -76,7 +76,13 @@ For test we have the doc: [http://localhost:8080/q/swagger-ui/](http://localhost
 Other options: Import the `client-address-api.json` file and lets test it.
 
 
-### 5. Run with Docker (optional - In Development)
+### 5. Run with Docker (In Development)
+
+### 6. Run unit tests  
+
+```bash
+./gradlew test
+```
 
 ---
 
