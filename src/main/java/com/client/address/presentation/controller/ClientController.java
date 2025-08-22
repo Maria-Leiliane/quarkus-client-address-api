@@ -29,7 +29,7 @@ public class ClientController {
             @QueryParam("creationDate") LocalDate creationDate,
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size) {
-        return clientService.findAllPaginated(name, creationDate, page, size);
+        return clientService.findAllPaginated(name, page, size);
     }
 
     @GET

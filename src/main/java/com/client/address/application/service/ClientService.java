@@ -38,19 +38,20 @@ public class ClientService {
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
-    public PageResponse<ClientResponse> findAllPaginated(String name, LocalDate creationDate, int page, int size) {
+    public PageResponse<ClientResponse> findAllPaginated(String name, int page, int size) {
         int offset = page * size;
-        String nameFilter = (name != null && !name.isBlank()) ? "%" + name + "%" : null;
+        String nameFilter = (name != null && !name.isBlank()) ? "%" + name + "%" : "%";
 
-        List<ClientEntity> clientEntities = clientRepository.findAllPaginated(nameFilter, creationDate, size, offset);
+        // Call the simplified repository methods
+        List<ClientEntity> clientEntities = clientRepository.findAllPaginated(nameFilter, size, offset);
+        long totalElements = clientRepository.countWithFilters(nameFilter);
+
         if (clientEntities.isEmpty()) {
-            return new PageResponse<>(new ArrayList<>(), page, size, 0, 0);
+            return new PageResponse<>(new ArrayList<>(), page, size, totalElements, 0L);
         }
 
-        long totalElements = clientRepository.countWithFilters(nameFilter, creationDate);
-
+        // The rest of the mapping logic remains the same
         List<Long> clientIds = clientEntities.stream().map(ClientEntity::getId).collect(Collectors.toList());
-
         Map<Long, List<AddressEntity>> addressesByClientId = addressRepository.findByClientIds(clientIds)
                 .stream()
                 .collect(Collectors.groupingBy(AddressEntity::getClientId));
@@ -58,12 +59,9 @@ public class ClientService {
         List<ClientResponse> responses = clientEntities.stream()
                 .map(client -> {
                     List<AddressEntity> addressEntities = addressesByClientId.getOrDefault(client.getId(), new ArrayList<>());
-
-                    //Convert the list of entities to a list of DTOs ---
                     List<AddressResponse> addressResponses = addressEntities.stream()
                             .map(AddressMapper::toResponse)
                             .collect(Collectors.toList());
-
                     return ClientMapper.toResponse(client, addressResponses);
                 })
                 .collect(Collectors.toList());

@@ -41,25 +41,21 @@ public interface ClientRepository {
 
     @SqlQuery("""
         SELECT * FROM clients
-        WHERE (:name IS NULL OR name ILIKE :name)
-          AND (:creationDate IS NULL OR DATE(created_at) = :creationDate)
-        ORDER BY created_at DESC -- CORRECTED: Using a fixed and safe sort order
+        WHERE name ILIKE :name -- Simplified WHERE clause
+        ORDER BY created_at DESC
         LIMIT :limit OFFSET :offset
     """)
     List<ClientEntity> findAllPaginated(
             @Bind("name") String name,
-            @Bind("creationDate") LocalDate creationDate,
             @Bind("limit") int limit,
             @Bind("offset") int offset
     );
 
     @SqlQuery("""
         SELECT COUNT(*) FROM clients
-        WHERE (:name IS NULL OR name ILIKE :name)
-          AND (:creationDate IS NULL OR DATE(created_at) = :creationDate)
+        WHERE name ILIKE :name -- Simplified WHERE clause
     """)
     long countWithFilters(
-            @Bind("name") String name,
-            @Bind("creationDate") LocalDate creationDate
+            @Bind("name") String name
     );
 }
