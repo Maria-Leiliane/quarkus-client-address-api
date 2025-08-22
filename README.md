@@ -49,6 +49,8 @@ git clone git@github.com:Maria-Leiliane/quarkus-client-address-api.git
 cd quarkus-client-address-api
 ```
 
+Create the database local: clientdb
+
 ### 2. Configure the Database
 
 Edit `application.properties`:
@@ -57,8 +59,7 @@ Edit `application.properties`:
 quarkus.datasource.db-kind=postgresql
 quarkus.datasource.username=youruser
 quarkus.datasource.password=yourpassword
-quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/client_address_db
-
+quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/clientdb
 quarkus.flyway.migrate-at-start=true
 ```
 
@@ -75,12 +76,7 @@ For test we have the doc: [http://localhost:8080/q/swagger-ui/](http://localhost
 Other options: Import the `client-address-api.json` file and lets test it.
 
 
-### 5. Run with Docker (optional)
-
-```bash
-docker build -t client-address-api .
-docker run -p 8080:8080 client-address-api
-```
+### 5. Run with Docker (optional - In Development)
 
 ---
 

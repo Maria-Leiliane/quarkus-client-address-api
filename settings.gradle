@@ -1,11 +1,8 @@
 pluginManagement {
     repositories {
-        mavenCentral()
         gradlePluginPortal()
-        mavenLocal()
-    }
-    plugins {
-        id "${quarkusPluginId}" version "${quarkusPluginVersion}"
+        mavenCentral()
     }
 }
-rootProject.name='quarkus-client-address-api'
+
+rootProject.name = "quarkus-client-address-api"

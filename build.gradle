@@ -1,14 +1,23 @@
 plugins {
     id 'java'
-    id 'io.quarkus'
+    id 'io.quarkus' version '3.25.3'
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
-    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    constraints {
+        implementation 'com.thoughtworks.xstream:xstream:1.4.21'
+        implementation 'io.netty:netty-common:4.1.111.Final'
+        implementation 'io.netty:netty-handler:4.1.111.Final'
+        implementation 'org.apache.commons:commons-lang3:3.15.0'
+        implementation 'org.jdbi:jdbi3-core:3.45.2'
+    }
+    implementation enforcedPlatform("io.quarkus.platform:quarkus-bom:3.25.3")
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation 'io.quarkiverse.jdbi:quarkus-jdbi:1.8.0'
     implementation 'io.quarkus:quarkus-jdbc-postgresql'
     implementation 'io.quarkus:quarkus-flyway'
@@ -16,6 +25,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-hibernate-validator'
     implementation 'io.quarkus:quarkus-elytron-security-properties-file'
     implementation 'io.quarkus:quarkus-arc'
+
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'io.quarkus:quarkus-junit5-mockito'
