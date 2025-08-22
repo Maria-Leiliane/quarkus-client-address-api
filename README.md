@@ -73,7 +73,7 @@ quarkus.flyway.migrate-at-start=true
 
 
 For test we have the doc: [http://localhost:8080/q/swagger-ui/](http://localhost:8080/q/swagger-ui/)  
-Other options: Import the `client-address-api.json` file and lets test it.
+Other options: Import in collection directory the `collection_2025-08-21.yaml` and lets test it.
 
 
 ### 5. Run with Docker (In Development)
