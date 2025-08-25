@@ -32,11 +32,13 @@ The solution provides a complete set of endpoints to manage **clients** and thei
 
 ## 🔒 Features
 
-* ✅ **Custom exception handling** → Unified error responses.
-* ✅ **Password encryption** → Using `BcryptUtil`.
-* ✅ **Validation for CPF and CNPJ** → Ensures domain integrity.
-* ✅ **Pagination & filtering** → For efficient client listing.
-* ✅ **Main address logic** → Enforces one main address per client.
+* ✅ **JWT Authentication & Authorization** → Secure token-based authentication using RSA public/private key signing and role-based access control (`@RolesAllowed`).
+* ✅ **Password Encryption** → Secure storage of user passwords using `Bcrypt`.
+* ✅ **Custom Exception Handling** → Unified and predictable error responses for the API consumer.
+* ✅ **Validation for CPF and CNPJ** → Custom validation to ensure domain integrity for document numbers.
+* ✅ **Pagination & Filtering** → Efficient client listing with support for pagination and filtering by name.
+* ✅ **Main Address Logic** → Business rule enforcement to ensure only one main address per client.
+
 
 ---
 
